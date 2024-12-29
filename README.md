@@ -245,3 +245,29 @@ Next.js automatically code splits your application by route segments. This is di
 Splitting code by routes means that pages become isolated. If a certain page throws an error, the rest of the application will still work.
 
 Furthermore, in production, whenever <Link> components appear in the browser's viewport, Next.js automatically prefetches the code for the linked route in the background. By the time the user clicks the link, the code for the destination page will already be loaded in the background, and this is what makes the page transition near-instant!
+
+## Chapter 6 - Setting Up Your Database
+
+Setup a PostgreSQL database from one of Vercel's marketplace integrations. You can skip this step if you're using your own database provider.
+
+**Seed your database**
+
+Uncomment `/app/seed/route.ts`. This creates a server-side endpoint that you can access in the browser to start populating your database.
+
+Ensure your local development server is running with pnpm run dev and navigate to `localhost:3000/seed`
+in your browser. When finished, you will see a message "Database seeded successfully" in the browser. Once completed, you can delete this file.!
+
+If you run into any issues while seeding your database and want to run the script again, you can drop any existing tables by running `DROP TABLE tablename` in your database query interface. See the executing queries section below for more details. But be careful, this command will delete the tables and all their data. It's ok to do this with your example app since you're working with placeholder data, but you shouldn't run this command in a production app.
+
+**Executing queries**
+
+Let's execute a query to make sure everything is working as expected. We'll use another Router Handler, `query/route.ts`, to query the database. Inside this file, you'll find a `listInvoices()` function that has the following SQL query.
+
+```sql
+SELECT invoices.amount, customers.name
+FROM invoices
+JOIN customers ON invoices.customer_id = customers.id
+WHERE invoices.amount = 666;
+```
+
+Uncomment the file and navigate to `localhost:3000/query` in your browser. You should see that an invoice amount and name is returned.
