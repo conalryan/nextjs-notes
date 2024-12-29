@@ -88,3 +88,91 @@ In addition to the approaches we've discussed, you can also style your Next.js a
 - Sass which allows you to import .css and .scss files.
 - CSS-in-JS libraries such as styled-jsx, styled-components, and emotion.
 
+### Chapter 3 - Fonts and Images
+
+[Cumulative Layout Shift](https://vercel.com/blog/how-core-web-vitals-affect-seo) is a metric used by Google to evaluate the performance and user experience of a website. With fonts, layout shift happens when the browser initially renders text in a fallback or system font and then swaps it out for a custom font once it has loaded. This swap can cause the text size, spacing, or layout to change, shifting elements around it.
+
+Next.js automatically optimizes fonts in the application when you use the next/font module. It downloads font files at build time and hosts them with your other static assets. This means when a user visits your application, there are no additional network requests for fonts which would impact performance.
+
+/app/ui/fonts.ts
+
+```tsx
+import { Inter } from 'next/font/google';
+ 
+export const inter = Inter({ subsets: ['latin'] });
+```
+
+/app/layout.tsx
+
+```tsx
+import '@/app/ui/global.css';
+import { inter } from '@/app/ui/fonts';
+ 
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="en">
+      <body className={`${inter.className} antialiased`}>{children}</body>
+    </html>
+  );
+}
+```
+
+**Why optimize images?**
+
+Next.js can serve static assets, like images, under the top-level /public folder. Files inside /public can be referenced in your application.
+
+With regular HTML, you would add an image as follows:
+
+<img
+  src="/hero.png"
+  alt="Screenshots of the dashboard project showing desktop version"
+/>
+
+However, this means you have to manually:
+- Ensure your image is responsive on different screen sizes.
+- Specify image sizes for different devices.
+- Prevent layout shift as the images load.
+- Lazy load images that are outside the user's viewport.
+
+Image Optimization is a large topic in web development that could be considered a specialization in itself. Instead of manually implementing these optimizations, you can use the next/image component to automatically optimize your images.
+
+/app/page.tsx
+```tsx
+import AcmeLogo from '@/app/ui/acme-logo';
+import { ArrowRightIcon } from '@heroicons/react/24/outline';
+import Link from 'next/link';
+import { lusitana } from '@/app/ui/fonts';
+import Image from 'next/image';
+ 
+export default function Page() {
+  return (
+    // ...
+    <div className="flex items-center justify-center p-6 md:w-3/5 md:px-28 md:py-12">
+      {/* Add Hero Images Here */}
+      <Image
+        src="/hero-desktop.png"
+        width={1000}
+        height={760}
+        className="hidden md:block"
+        alt="Screenshots of the dashboard project showing desktop version"
+      />
+    </div>
+    //...
+  );
+}
+```
+
+Here, you're setting the `width` to `1000` and `height` to `760` pixels. It's good practice to set the `width` and `height` of your images to avoid layout shift, these should be an aspect ratio identical to the source image.
+
+**Remeber** Images without dimensions and web fonts are common causes of layout shift.
+
+**Recommended reading**
+- [Font Optimization Docs](https://nextjs.org/docs/app/building-your-application/optimizing/images)
+- [Image Optimization Docs](https://nextjs.org/docs/app/building-your-application/optimizing/fonts)
+- [Improving Web Performance with Images (MDN)](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Performance/Multimedia)
+- [Web Fonts (MDN)](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Text_styling/Web_fonts)
+- [How Core Web Vitals Affect SEO](https://vercel.com/blog/how-core-web-vitals-affect-seo)
