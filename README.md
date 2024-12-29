@@ -176,3 +176,59 @@ Here, you're setting the `width` to `1000` and `height` to `760` pixels. It's go
 - [Improving Web Performance with Images (MDN)](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Performance/Multimedia)
 - [Web Fonts (MDN)](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Text_styling/Web_fonts)
 - [How Core Web Vitals Affect SEO](https://vercel.com/blog/how-core-web-vitals-affect-seo)
+
+### Chapter 4 - Layouts and Pages
+
+**Nested routing**
+
+Next.js uses file-system routing where folders are used to create nested routes. Each folder represents a route segment that maps to a URL segment.
+
+You can create separate UIs for each route using layout.tsx and page.tsx files.
+
+`page.tsx` is a special Next.js file that exports a React component, and it's required for the route to be accessible. In your application, you already have a `page.tsx` file: `/app/page.tsx` - this is the home page associated with the route `/`.
+
+To create a nested route, you can nest folders inside each other and add `page.tsx` files inside them
+
+`/app/dashboard/page.tsx` is associated with the `/dashboard` path
+```tsx
+export default function Page() {
+  return <p>Dashboard Page</p>;
+}
+```
+
+This is how you can create different pages in Next.js: create a new route segment using a folder, and add a page file inside it.
+
+By having a special name for `page` files, Next.js allows you to colocate UI components, test files, and other related code with your routes. Only the content inside the `page` file will be publicly accessible. For example, the `/ui` and `/lib` folders are colocated inside the `/app` folder along with your routes.
+
+**Creating the dashboard layout**
+
+Dashboards have some sort of navigation that is shared across multiple pages. In Next.js, you can use a special `layout.tsx` file to create UI that is shared between multiple pages. Let's create a layout for the dashboard pages!
+
+Inside the `/dashboard` folder, add a new file called `layout.tsx` and paste the following code:
+
+`/app/dashboard/layout.tsx`
+```tsx
+import SideNav from '@/app/ui/dashboard/sidenav';
+ 
+export default function Layout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex h-screen flex-col md:flex-row md:overflow-hidden">
+      <div className="w-full flex-none md:w-64">
+        <SideNav />
+      </div>
+
+      <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+        {/* This child can either be a page or another layout */}
+        {children}
+      </div>
+    </div>
+  );
+}
+```
+
+One benefit of using `layouts` in Next.js is that on navigation, only the page components update while the layout won't re-render. This is called partial rendering:
+
+**Root Layout**
+
+`/app/layout.tsx` is called a root layout and is required. Any UI you add to the root layout will be shared across all pages in your application. You can use the root layout to modify your <html> and <body> tags, and add metadata
+
