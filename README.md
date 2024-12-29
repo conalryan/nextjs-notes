@@ -1,6 +1,6 @@
 # Next.js Notes
 
-## Workspace Setup
+## Intro - Workspace Setup
 
 ```bash
 pnpm init
@@ -10,9 +10,7 @@ pnpm init
 echo "packages:\n  - \"packages/*\"" >> pnpm-workspace.yaml
 ```
 
-## Packages
-
-### 01 - Next.js Dashboard
+## Chapter 1 - Dashboard
 
 `npx create-next-app@latest packages/01-nextjs-dashboard --example "https://github.com/vercel/next-learn/tree/main/dashboard/starter-example" --use-pnpm`
 
@@ -37,7 +35,7 @@ for your code editor, to help with auto-completion and type-safety.
 
 `pnpm -F 01-nextjs-dashboard dev`
 
-### Chapter 2 - Styling
+## Chapter 2 - Styling
 
 - How to add a global CSS file to your application.
 - Two different ways of styling: Tailwind and CSS modules.
@@ -88,7 +86,7 @@ In addition to the approaches we've discussed, you can also style your Next.js a
 - Sass which allows you to import .css and .scss files.
 - CSS-in-JS libraries such as styled-jsx, styled-components, and emotion.
 
-### Chapter 3 - Fonts and Images
+## Chapter 3 - Fonts and Images
 
 [Cumulative Layout Shift](https://vercel.com/blog/how-core-web-vitals-affect-seo) is a metric used by Google to evaluate the performance and user experience of a website. With fonts, layout shift happens when the browser initially renders text in a fallback or system font and then swaps it out for a custom font once it has loaded. This swap can cause the text size, spacing, or layout to change, shifting elements around it.
 
@@ -177,7 +175,7 @@ Here, you're setting the `width` to `1000` and `height` to `760` pixels. It's go
 - [Web Fonts (MDN)](https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Text_styling/Web_fonts)
 - [How Core Web Vitals Affect SEO](https://vercel.com/blog/how-core-web-vitals-affect-seo)
 
-### Chapter 4 - Layouts and Pages
+## Chapter 4 - Layouts and Pages
 
 **Nested routing**
 
@@ -232,3 +230,18 @@ One benefit of using `layouts` in Next.js is that on navigation, only the page c
 
 `/app/layout.tsx` is called a root layout and is required. Any UI you add to the root layout will be shared across all pages in your application. You can use the root layout to modify your <html> and <body> tags, and add metadata
 
+## Chapter 5 - Navigation
+
+When using a traditionally <a> HTML element to link pages the will perform a full page refresh on each page navigation!
+
+**The <Link> component**
+
+Use the <Link /> Component to link between pages in your application allowing client-side navigation with JavaScript.
+
+**Automatic code-splitting and prefetching**
+
+Next.js automatically code splits your application by route segments. This is different from a traditional React SPA, where the browser loads all your application code on initial load.
+
+Splitting code by routes means that pages become isolated. If a certain page throws an error, the rest of the application will still work.
+
+Furthermore, in production, whenever <Link> components appear in the browser's viewport, Next.js automatically prefetches the code for the linked route in the background. By the time the user clicks the link, the code for the destination page will already be loaded in the background, and this is what makes the page transition near-instant!
